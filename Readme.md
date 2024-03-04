@@ -18,12 +18,7 @@ logs and pod data from the cluster.
 
 ## Installation
 ```bash
-TODO 
-```
-
-## Usage
-```bash
-TODO
+pip install kdc-kubeconnector
 ```
 
 ## Configuration
@@ -54,6 +49,20 @@ token = "token2"
 [cluster.uat]
 url = "http://uat:8001
 token = "token3"
+```
+
+## Usage Examples
+List pods
+```bash
+kdc -p
+```
+Get logs from the pod with name like nginx-sd4353453-4543d
+```bash
+kdc -l nginx
+```
+Get logs from the few pods
+```bash
+kdc -l nginx app1 app2
 ```
 
 ## Contributing
