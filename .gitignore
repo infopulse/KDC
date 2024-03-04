@@ -7,4 +7,3 @@ dist/
 *.egg-info/
 
 config.toml
-kc.spec

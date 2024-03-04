@@ -1,12 +1,10 @@
 import time
-
 import requests
 from requests import Response
 import logging
 import urllib3
 import datetime as dt
-from prettytable import PrettyTable
-from parsers import _parse_pods_response, _parse_jobs_response, _parse_deployments_response, _parse_raw_logs
+from kdc.parsers import _parse_pods_response, _parse_jobs_response, _parse_deployments_response, _parse_raw_logs
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -43,7 +41,7 @@ class KubeDashboard:
         self.url = url
         self.token = token
         self.session = requests.Session()
-        self.log = logging.getLogger('KC')
+        self.log = logging.getLogger('KDC')
 
         self.retry = kwargs.get('retry', 3)
         self.timeout = kwargs.get('timeout', 10)
