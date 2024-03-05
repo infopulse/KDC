@@ -57,6 +57,10 @@ token = "token3"
 List pods
 ```bash
 kdc -p
+kdc -p s=running --only running
+kdc -p s=run  --only running
+kdc -p n=nginx --only with name nginx
+kdc -p s=run n=ngi with name nginx
 ```
 Get logs from the pod with name like nginx-sd4353453-4543d
 ```bash

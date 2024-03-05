@@ -210,6 +210,6 @@ class KubeDashboard:
         for pod in pods:
             self.log.info('downloading logs for pod: ' + pod['name'])
             rsp = self.get(f'/api/v1/log/file/{self.namespace}/{pod["name"]}/{pod['appLabel']}/?previous=false')
-            with open(f'{pod["name"]}.log', 'w') as f:
-                f.write(rsp.text)
+            with open(f'{pod["name"]}.log', 'wb') as f:
+                f.write(rsp.content)
             self.log.info('all logs are saved into the current directory')

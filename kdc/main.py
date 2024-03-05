@@ -48,6 +48,7 @@ def get_parser():
                         metavar=('pattern', 'replicas'))
     parser.add_argument('-x', '--delete', help='delete the 1st pod by matching pattern', type=str)
     parser.add_argument('-w', '--whereisconfig', help='show where the config file is located', action='store_true')
+    parser.add_argument('-f', '--file', help='download and save selected pod logs', nargs='+')
     return parser
 
 
@@ -224,6 +225,10 @@ def app():
 
     if args.delete:
         dashboard.delete_pods(args.delete[0])
+        exit(0)
+
+    if args.file:
+        dashboard.save_logs(*args.file)
         exit(0)
 
     print('No action specified. Use -h to see the help.')
