@@ -28,6 +28,8 @@ def get_parser():
     parser.add_argument('-u', '--clusters', help='list cluster names from the config file', action='store_true')
     parser.add_argument('-n', '--namespace', help='set the default namespace to work with', type=str)
     parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
+    parser.add_argument('-t', '--token', help='show and copy to clipboard the token of selected cluster',
+                        action='store_true')
 
     parser.add_argument('-d', '--deploy', help='list deployment names', action='store_true')
     parser.add_argument('-p', '--pods', help='list pods. Use n=name to filter by name, s=status to filter by status',
@@ -136,11 +138,6 @@ def app():
     parser = get_parser()
     args = parser.parse_args()
 
-    if not any(arg is not False for arg in vars(args).values()):
-        print("No arguments were provided. Try -h for help.")
-        parser.print_help()
-        exit(1)
-
     dashboard = KubeDashboard(**cluster_config)
 
     if args.clusters:
@@ -166,8 +163,15 @@ def app():
             log.error(f'Cluster {args.cluster} not found in the config file. Configure the cluster first.')
         exit(0)
 
+    if args.token:
+        default_cluster = config['default']['cluster']
+        cluster = config['cluster'].get(default_cluster)
+        log.warning(f'Cluster {default_cluster} token. ⚠️Copied to clipboard ⚠️\n\n'
+                    f''
+                    f'{cluster["token"]})')
+        exit(0)
+
     # actions with the dashboard ⬇️⬇️⬇️
-    # dashboard.authorize()
 
     if args.deploy:
         deployments = dashboard.get_deployments()
@@ -177,7 +181,7 @@ def app():
         print(table)
         exit(0)
 
-    if args.pods:
+    if args.pods is not None:
         pod_filter = dict()
         for arg in args.pods:
             if arg.startswith('n='):
@@ -185,7 +189,6 @@ def app():
             if arg.startswith('s='):
                 pod_filter['status_filter'] = arg[2:]
         pods = dashboard.get_pods(**pod_filter)
-
         table = PrettyTable()
         table.field_names = ['App', 'Name', 'Restarts', 'Status', 'Created']
         table.add_rows([[p['appLabel'], p['name'], p['restarts'], p['status'], p['created']] for p in pods])
@@ -215,6 +218,8 @@ def app():
     if args.delete:
         dashboard.delete_pods(args.delete[0])
         exit(0)
+
+    print('No action specified. Use -h to see the help.')
 
 
 def main():
