@@ -166,9 +166,7 @@ def app():
     if args.token:
         default_cluster = config['default']['cluster']
         cluster = config['cluster'].get(default_cluster)
-        log.warning(f'Cluster {default_cluster} token. ⚠️Copied to clipboard ⚠️\n\n'
-                    f''
-                    f'{cluster["token"]})')
+        log.warning(f'Cluster {default_cluster} token. ⚠️Copied to clipboard ⚠️\n\n{cluster["token"]} \n')
         exit(0)
 
     # actions with the dashboard ⬇️⬇️⬇️
