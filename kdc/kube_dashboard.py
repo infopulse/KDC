@@ -74,19 +74,19 @@ class KubeDashboard:
     def get(self, endpoint: str, **kwargs) -> Response:
         return self.session.get(self.url + endpoint, verify=False, **kwargs)
 
-    def get_pods(self) -> list:
+    def get_pods(self, name_filter: str = '', status_filter: str = '') -> list:
         rsp = self.get(f'/api/v1/pod/{self.namespace}',
                        params={'itemsPerPage': 100,
                                'page': 1,
                                'sortBy': 'd,creationTimestamp'}
                        )
         self.log.debug('Requested get pods URL: ' + rsp.request.url)
-        pods = _parse_pods_response(rsp.json())
+        pods = _parse_pods_response(rsp.json(), name_filter, status_filter)
         return pods
 
     def get_jobs(self) -> list:
         rsp = self.get(f'/api/v1/job/{self.namespace}',
-                       params={'itemsPerPage': 20,
+                       params={'itemsPerPage': 30,
                                'page': 1,
                                'sortBy': 'd,creationTimestamp'}
                        )
@@ -96,7 +96,7 @@ class KubeDashboard:
 
     def get_deployments(self) -> list:
         rsp = self.get(f'/api/v1/deployment/{self.namespace}',
-                       params={'itemsPerPage': 20,
+                       params={'itemsPerPage': 100,
                                'page': 1,
                                'sortBy': 'd,creationTimestamp'}
                        )

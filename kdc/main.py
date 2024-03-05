@@ -30,7 +30,8 @@ def get_parser():
     parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
 
     parser.add_argument('-d', '--deploy', help='list deployment names', action='store_true')
-    parser.add_argument('-p', '--pods', help='list pods', action='store_true')
+    parser.add_argument('-p', '--pods', help='list pods. Use n=name to filter by name, s=status to filter by status',
+                        nargs='+')
     parser.add_argument('-j', '--jobs', help='list jobs', action='store_true')
 
     parser.add_argument('-l', '--logs', help='tail pods logs by name patterns separated by spaces.\n'
@@ -114,7 +115,7 @@ def get_cluster_config(cfg: dict) -> dict or None:
     return cluster
 
 
-def main():
+def app():
     try:
         config = get_config(CONFIG_FILE_PATH)
     except Exception:
@@ -166,7 +167,7 @@ def main():
         exit(0)
 
     # actions with the dashboard ⬇️⬇️⬇️
-    dashboard.authorize()
+    # dashboard.authorize()
 
     if args.deploy:
         deployments = dashboard.get_deployments()
@@ -177,7 +178,14 @@ def main():
         exit(0)
 
     if args.pods:
-        pods = dashboard.get_pods()
+        pod_filter = dict()
+        for arg in args.pods:
+            if arg.startswith('n='):
+                pod_filter['name'] = arg[2:]
+            if arg.startswith('s='):
+                pod_filter['status'] = arg[2:]
+        pods = dashboard.get_pods(**pod_filter)
+
         table = PrettyTable()
         table.field_names = ['App', 'Name', 'Restarts', 'Status', 'Created']
         table.add_rows([[p['appLabel'], p['name'], p['restarts'], p['status'], p['created']] for p in pods])
@@ -206,6 +214,14 @@ def main():
 
     if args.delete:
         dashboard.delete_pods(args.delete[0])
+        exit(0)
+
+
+def main():
+    try:
+        app()
+    except KeyboardInterrupt:
+        print("\nInterrupted by user. Exiting...")
         exit(0)
 
 

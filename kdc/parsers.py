@@ -1,7 +1,7 @@
 import datetime as dt
 
 
-def _parse_pods_response(response: dict) -> list:
+def _parse_pods_response(response: dict, name_filter: str = '', status_filter: str = '') -> list:
     pods = list()
     for pod in response['pods']:
         p = {'status': 'unknown', 'restarts': 'unknown', 'name': 'unknown', 'appLabel': 'unknown', 'created': 'unknown'}
@@ -16,6 +16,9 @@ def _parse_pods_response(response: dict) -> list:
             pass  # it is done in purpose to avoid corrupted pod data to crash the app
         finally:
             pods.append(p)
+    # filtering part
+    pods = [pod for pod in pods if name_filter.lower() in pod['name'].lower()]
+    pods = [pod for pod in pods if status_filter.lower() in pod['status'].lower()]
     return pods
 
 
@@ -47,6 +50,7 @@ def _parse_deployments_response(response: dict) -> list:
             pass  # it is done in purpose to avoid corrupted pod data to crash the app
         finally:
             deployments.append(d)
+    deployments.sort(key=lambda x: x['name'])
     return deployments
 
 
