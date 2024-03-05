@@ -201,7 +201,15 @@ class KubeDashboard:
 
     def save_logs(self, *pod_patterns: str):
         pods = self.get_pods()
-        pod_names = [p['name'] for p in pods if any(pattern in p['name'] for pattern in pod_patterns)]
-        if len(pod_names) == 0:
+        pods = [p for p in pods if any(pattern in p['name'] for pattern in pod_patterns)]
+        if len(pods) == 0:
             self.log.warning(f'No pods found for patterns: {pod_patterns}')
             return
+
+        self.log.warning('request to download logs can take a while. Please wait and be patient')
+        for pod in pods:
+            self.log.info('downloading logs for pod: ' + pod['name'])
+            rsp = self.get(f'/api/v1/log/file/{self.namespace}/{pod["name"]}/{pod['appLabel']}/?previous=false')
+            with open(f'{pod["name"]}.log', 'w') as f:
+                f.write(rsp.text)
+            self.log.info('all logs are saved into the current directory')

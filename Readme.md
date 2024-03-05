@@ -15,6 +15,8 @@ logs and pod data from the cluster.
 - [x] get logs from the latest job by name pattern
 - [x] delete pod by name pattern (1 per time, check if it is allowed)
 - [x] scale deployment by name pattern (1 per time, check if it is allowed)
+- [x] download logs to the file
+- [x] show the token of current cluster
 
 ## Installation
 ```bash

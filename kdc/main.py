@@ -2,6 +2,7 @@ import toml
 import argparse
 import os
 import logging
+import pyperclip
 from prettytable import PrettyTable
 from kdc.kube_dashboard import KubeDashboard
 
@@ -25,7 +26,7 @@ def get_parser():
                     f'For the first run file ~/{CONFIG_FILE_PATH} is created'
                     'Open the config file and fill in kubernetes dashboard URL and access token.'
                     'There can be many clusters defined in the config file, but only one can be operated at once.')
-    parser.add_argument('-u', '--clusters', help='list cluster names from the config file', action='store_true')
+    parser.add_argument('-e', '--envs', help='list cluster (evn) names from the config file', action='store_true')
     parser.add_argument('-n', '--namespace', help='set the default namespace to work with', type=str)
     parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
     parser.add_argument('-t', '--token', help='show and copy to clipboard the token of selected cluster',
@@ -46,6 +47,7 @@ def get_parser():
     parser.add_argument('-s', '--scale', help='scale deployment by name pattern', nargs=2,
                         metavar=('pattern', 'replicas'))
     parser.add_argument('-x', '--delete', help='delete the 1st pod by matching pattern', type=str)
+    parser.add_argument('-w', '--whereisconfig', help='show where the config file is located', action='store_true')
     return parser
 
 
@@ -140,7 +142,7 @@ def app():
 
     dashboard = KubeDashboard(**cluster_config)
 
-    if args.clusters:
+    if args.envs:
         prettytable = PrettyTable()
         prettytable.field_names = ['Cluster', 'URL']
         for cluster, data in config['cluster'].items():
@@ -166,7 +168,14 @@ def app():
     if args.token:
         default_cluster = config['default']['cluster']
         cluster = config['cluster'].get(default_cluster)
+        pyperclip.copy(cluster['token'])
         log.warning(f'Cluster {default_cluster} token. ⚠️Copied to clipboard ⚠️\n\n{cluster["token"]} \n')
+        exit(0)
+
+    if args.whereisconfig:
+        home_dir = os.path.expanduser('~')
+        file_path = os.path.join(home_dir, CONFIG_FILE_PATH)
+        log.info(f'Config file location:\n\n{file_path}\n')
         exit(0)
 
     # actions with the dashboard ⬇️⬇️⬇️
