@@ -136,7 +136,7 @@ def app():
     parser = get_parser()
     args = parser.parse_args()
 
-    if not any(vars(args).values()):
+    if not any(arg is not False for arg in vars(args).values()):
         print("No arguments were provided. Try -h for help.")
         parser.print_help()
         exit(1)
