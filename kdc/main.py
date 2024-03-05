@@ -39,10 +39,10 @@ def get_parser():
                                              'Example 2: kdc -l nginx hello -> will get all pods with name nginx and hello\n'
                                              'Example 3: kdc -l hello-6779dffb89-m6bc9 -> will get logs from specific pod',
                         nargs='+')
-    parser.add_argument('-jl', '--joblog', help='tail the log of the latest job with matching pattern', nargs=1)
+    parser.add_argument('-jl', '--joblog', help='tail the log of the latest job with matching pattern', type=str)
     parser.add_argument('-s', '--scale', help='scale deployment by name pattern', nargs=2,
                         metavar=('pattern', 'replicas'))
-    parser.add_argument('-x', '--delete', help='delete the 1st pod by matching pattern', nargs=1)
+    parser.add_argument('-x', '--delete', help='delete the 1st pod by matching pattern', type=str)
     return parser
 
 
