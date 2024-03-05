@@ -1,23 +1,14 @@
-import toml
 import argparse
 import os
-import logging
 import pyperclip
 from prettytable import PrettyTable
 from kdc.kube_dashboard import KubeDashboard
+from kdc.config import (get_config, save_config, get_cluster_config,
+                        open_config_file, get_log)
 
 CONFIG_FILE_NAME = 'config.toml'
 CONFIG_FILE_FOLDER = '.kdc'
 CONFIG_FILE_PATH = CONFIG_FILE_FOLDER + '/' + CONFIG_FILE_NAME
-
-
-def get_log(name='KDC', save_logs=False, log_file='kdc.log', log_level='INFO'):
-    logger = logging.getLogger(name)
-    logger.addHandler(logging.StreamHandler())
-    logger.setLevel(log_level)
-    if save_logs:
-        logger.addHandler(logging.FileHandler(log_file))
-    return logger
 
 
 def get_parser():
@@ -49,75 +40,8 @@ def get_parser():
     parser.add_argument('-x', '--delete', help='delete the 1st pod by matching pattern', type=str)
     parser.add_argument('-w', '--whereisconfig', help='show where the config file is located', action='store_true')
     parser.add_argument('-f', '--file', help='download and save selected pod logs', nargs='+')
+    parser.add_argument('-o', '--openconfig', help='open the config file in the default editor', action='store_true')
     return parser
-
-
-def create_config(file_name: str) -> dict:
-    default_config = {
-        'default': {
-            'cluster': 'localhost',
-            'namespace': 'default'
-        },
-        'log': {
-            'level': 'INFO',
-            'file': 'kdc.log',
-            'save': False
-        },
-        'connection': {
-            'retries': 3,
-            'delay': 1
-        },
-        'cluster': {
-            'localhost': {
-                'url': 'http://localhost:8001',
-                'token': 'secure 1'
-            },
-            'dev': {
-                'url': 'https://k8s-dev.example.com',
-                'token': 'secure 2'
-            }
-        }
-    }
-    save_config(default_config, file_name)
-    return default_config
-
-
-def get_config(file_name: str) -> dict:
-    home_dir = os.path.expanduser('~')
-    file_path = os.path.join(home_dir, file_name)
-    if not os.path.isfile(file_path):
-        return create_config(file_path)
-    else:
-        return read_config(file_path)
-
-
-def save_config(cfg: dict, file_name: str) -> None:
-    home_dir = os.path.expanduser('~')
-    file_path = os.path.join(home_dir, file_name)
-    directory = os.path.dirname(file_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    with open(file_path, 'w') as file:
-        toml.dump(cfg, file)
-
-
-def read_config(file_path):
-    with open(file_path, 'r') as file:
-        cfg = toml.load(file)
-    return cfg
-
-
-def get_cluster_config(cfg: dict) -> dict or None:
-    default = cfg['default']['cluster']
-    cluster = cfg['cluster'].get(default)
-    if len(cfg['cluster']) == 0:
-        return None
-    if not cluster:
-        default = tuple(cfg['cluster'].keys())[0]
-        cluster = cfg['cluster'].get(default)
-    cluster['name'] = default
-    cluster.update(cfg['connection'])
-    return cluster
 
 
 def app():
@@ -177,6 +101,12 @@ def app():
         home_dir = os.path.expanduser('~')
         file_path = os.path.join(home_dir, CONFIG_FILE_PATH)
         log.info(f'Config file location:\n\n{file_path}\n')
+        exit(0)
+
+    if args.openconfig:
+        home_dir = os.path.expanduser('~')
+        file_path = os.path.join(home_dir, CONFIG_FILE_PATH)
+        open_config_file(file_path)
         exit(0)
 
     # actions with the dashboard ⬇️⬇️⬇️
