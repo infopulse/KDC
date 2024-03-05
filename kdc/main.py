@@ -31,7 +31,7 @@ def get_parser():
 
     parser.add_argument('-d', '--deploy', help='list deployment names', action='store_true')
     parser.add_argument('-p', '--pods', help='list pods. Use n=name to filter by name, s=status to filter by status',
-                        nargs='+')
+                        nargs='*')
     parser.add_argument('-j', '--jobs', help='list jobs', action='store_true')
 
     parser.add_argument('-l', '--logs', help='tail pods logs by name patterns separated by spaces.\n'
@@ -181,9 +181,9 @@ def app():
         pod_filter = dict()
         for arg in args.pods:
             if arg.startswith('n='):
-                pod_filter['name'] = arg[2:]
+                pod_filter['name_filter'] = arg[2:]
             if arg.startswith('s='):
-                pod_filter['status'] = arg[2:]
+                pod_filter['status_filter'] = arg[2:]
         pods = dashboard.get_pods(**pod_filter)
 
         table = PrettyTable()
