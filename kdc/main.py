@@ -101,9 +101,14 @@ def read_config(file_path):
     return cfg
 
 
-def get_cluster_config(cfg):
+def get_cluster_config(cfg: dict) -> dict or None:
     default = cfg['default']['cluster']
-    cluster = cfg['cluster'][default].copy()
+    cluster = cfg['cluster'].get(default)
+    if len(cfg['cluster']) == 0:
+        return None
+    if not cluster:
+        default = tuple(cfg['cluster'].keys())[0]
+        cluster = cfg['cluster'].get(default)
     cluster['name'] = default
     cluster.update(cfg['connection'])
     return cluster
@@ -112,16 +117,19 @@ def get_cluster_config(cfg):
 def main():
     try:
         config = get_config(CONFIG_FILE_PATH)
-    except Exception as e:
-        print('Failed to read config file:', e)
+    except Exception:
+        print('Failed to read config file:')
         exit(1)
     log = get_log(save_logs=config['log']['save'],
                   log_file=config['log']['file'],
                   log_level=config['log']['level'])
     try:
         cluster_config = get_cluster_config(config)
-    except Exception as e:
-        log.error('Failed to get cluster config:', e)
+        if not cluster_config:
+            log.error('There is no clusters in the config')
+            exit(1)
+    except Exception:
+        log.error('Failed to get cluster config')
         exit(1)
 
     parser = get_parser()
