@@ -10,8 +10,10 @@ def _parse_pods_response(response: dict) -> list:
             p['status'] = pod['status']
             p['restarts'] = pod['restartCount']
             p['name'] = pod['objectMeta']['name']
-            p['appLabel'] = pod['objectMeta']['labels']['app']
             p['created'] = pod['objectMeta']['creationTimestamp']
+            p['appLabel'] = pod['objectMeta']['labels'].get('app')
+        except Exception:
+            pass  # it is done in purpose to avoid corrupted pod data to crash the app
         finally:
             pods.append(p)
     return pods
@@ -25,6 +27,8 @@ def _parse_jobs_response(response: dict) -> list:
             j['name'] = job['objectMeta']['name']
             j['status'] = job['jobStatus']['status']
             j['created'] = job['objectMeta']['creationTimestamp']
+        except Exception:
+            pass  # it is done in purpose to avoid corrupted pod data to crash the app
         finally:
             jobs.append(j)
     return jobs
@@ -39,6 +43,8 @@ def _parse_deployments_response(response: dict) -> list:
             d['created'] = deployment['objectMeta']['creationTimestamp']
             d['desired_pods'] = deployment['pods']['desired']
             d['running_pods'] = deployment['pods']['running']
+        except Exception:
+            pass  # it is done in purpose to avoid corrupted pod data to crash the app
         finally:
             deployments.append(d)
     return deployments
