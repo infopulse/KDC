@@ -83,6 +83,7 @@ def app():
         exit(0)
 
     if args.cluster:
+        config = get_config(CONFIG_FILE_PATH)
         if args.cluster in config['cluster'].keys():
             config['default']['cluster'] = args.cluster
             save_config(config, CONFIG_FILE_PATH)
