@@ -19,6 +19,12 @@ logs and pod data from the cluster.
 - [x] show the token of current cluster
 
 ## Installation
+1. Clone the repository and open the terminal in the root folder (should have `pyproject.toml` file in it)
+2. install the build tool ```pip install build```
+3. run the build command ```python -m build```
+4. install the package ```pip install dist/kdc-1.3.1-py3-none-any.whl```
+
+It is planned the app to be published on PyPi, so the installation will be easier.
 ```bash
 pip install kdc-kubeconnector
 ```
