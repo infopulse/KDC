@@ -208,8 +208,10 @@ class KubeDashboard:
 
         self.log.warning('request to download logs can take a while. Please wait and be patient')
         for pod in pods:
-            self.log.info('downloading logs for pod: ' + pod['name'])
-            rsp = self.get(f'/api/v1/log/file/{self.namespace}/{pod["name"]}/{pod['appLabel']}/?previous=false')
+            pod_name = pod['name']
+            pod_label = pod['appLabel']
+            self.log.info(f'downloading logs for pod: {pod_name}')
+            rsp = self.get(f'/api/v1/log/file/{self.namespace}/{pod_name}/{pod_label}/?previous=false')
             with open(f'{pod["name"]}.log', 'wb') as f:
                 f.write(rsp.content)
             self.log.info('all logs are saved into the current directory')
