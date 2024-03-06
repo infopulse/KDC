@@ -69,9 +69,10 @@ def app():
 
     if args.envs:
         prettytable = PrettyTable()
-        prettytable.field_names = ['Cluster', 'URL']
+        prettytable.field_names = ['Selected', 'Cluster', 'URL']
         for cluster, data in config['cluster'].items():
-            prettytable.add_row([cluster, data['url']])
+            selected = '------>' if cluster == config['default']['cluster'] else ''
+            prettytable.add_row([selected, cluster, data['url']])
         print(prettytable)
         exit(0)
 
