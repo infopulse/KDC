@@ -77,6 +77,7 @@ def app():
         exit(0)
 
     if args.namespace:
+        config = get_config(CONFIG_FILE_PATH)
         config['default']['namespace'] = args.namespace
         save_config(config, CONFIG_FILE_PATH)
         log.info(f'Namespace set to {args.namespace}')
