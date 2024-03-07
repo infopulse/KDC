@@ -85,6 +85,7 @@ def get_cluster_config(cfg: dict) -> dict or None:
         cluster = cfg['cluster'].get(default)
     cluster['name'] = default
     cluster.update(cfg['connection'])
+    cluster.update({'namespace': cfg['default'].get('namespace')})
     return cluster
 
 

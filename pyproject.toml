@@ -3,11 +3,11 @@ requires = ["setuptools>=69.1.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-exclude = [".github", "config.toml"]
+exclude = [".github", "config.toml", "build.bat", "build.sh"]
 
 [project]
 name = "kdc"
-version = "1.5.4"
+version = "1.5.8"
 description = "Tool to work with kubernetes dashboard, if there is no kubectl access"
 requires-python = ">=3.11"
 

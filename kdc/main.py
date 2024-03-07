@@ -95,6 +95,7 @@ def app():
     elif args.namespace is not None:
         config = get_config(CONFIG_FILE_PATH)
         config['default']['namespace'] = args.namespace
+        cluster_config['namespace'] = args.namespace
         dashboard = KubeDashboard(**cluster_config)
         save_config(config, CONFIG_FILE_PATH)
         log.info(f'Namespace set to {args.namespace}')
@@ -126,7 +127,10 @@ def app():
     if args.openconfig:
         home_dir = os.path.expanduser('~')
         file_path = os.path.join(home_dir, CONFIG_FILE_PATH)
-        open_config_file(file_path)
+        try:
+            open_config_file(file_path)
+        except Exception:
+            log.error(f'Failed to open the file {file_path} in the default editor. Try to open it manually.')
         exit(0)
 
     # actions with the dashboard ⬇️⬇️⬇️
@@ -181,7 +185,8 @@ def app():
         dashboard.save_logs(*args.file)
         exit(0)
 
-    print('No action specified. Use -h to see the help.')
+    if not args.namespace:
+        print('No action specified. Use -h to see the help.')
 
 
 def main():
