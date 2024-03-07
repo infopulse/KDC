@@ -67,7 +67,7 @@ kdc -p
 kdc -p s=running --only running
 kdc -p s=run  --only running
 kdc -p n=nginx --only with name nginx
-kdc -p s=run n=ngi with name nginx
+kdc -p s=run n=ngi --with name nginx
 ```
 Get logs from the pod with name like nginx-sd4353453-4543d
 ```bash
@@ -76,6 +76,22 @@ kdc -l nginx
 Get logs from the few pods
 ```bash
 kdc -l nginx app1 app2
+```
+List namespaces
+```bash
+kdc -n
+```
+Set the namespace to work with by default
+```bash
+kdc -n default
+kdc -n dev
+kdc -n uat
+```
+
+Use the namespace with other commands
+```bash
+kdc -n default -p --all pods from default namespace
+kdc -n dev -d --all deployments from dev namespace
 ```
 
 ## Contributing

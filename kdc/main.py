@@ -95,9 +95,10 @@ def app():
     elif args.namespace is not None:
         config = get_config(CONFIG_FILE_PATH)
         config['default']['namespace'] = args.namespace
+        dashboard = KubeDashboard(**cluster_config)
         save_config(config, CONFIG_FILE_PATH)
         log.info(f'Namespace set to {args.namespace}')
-        exit(0)
+        # exit(0) # no exit here, because we want to continue with the actions
 
     if args.cluster:
         config = get_config(CONFIG_FILE_PATH)

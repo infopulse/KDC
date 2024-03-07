@@ -38,11 +38,11 @@ def create_config(file_name: str) -> dict:
         'cluster': {
             'localhost': {
                 'url': 'http://localhost:8001',
-                'token': 'secure 1'
+                'token': 'secure 1',
             },
             'dev': {
                 'url': 'https://k8s-dev.example.com',
-                'token': 'secure 2'
+                'token': 'secure 2',
             }
         }
     }

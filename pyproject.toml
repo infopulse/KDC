@@ -7,7 +7,7 @@ exclude = [".github", "config.toml"]
 
 [project]
 name = "kdc"
-version = "1.5.3"
+version = "1.5.4"
 description = "Tool to work with kubernetes dashboard, if there is no kubectl access"
 requires-python = ">=3.11"
 
