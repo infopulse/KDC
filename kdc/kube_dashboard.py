@@ -4,7 +4,8 @@ from requests import Response
 import logging
 import urllib3
 import datetime as dt
-from kdc.parsers import _parse_pods_response, _parse_jobs_response, _parse_deployments_response, _parse_raw_logs
+from kdc.parsers import _parse_pods_response, _parse_jobs_response, _parse_deployments_response, _parse_raw_logs, \
+    _parse_namespaces
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -215,3 +216,9 @@ class KubeDashboard:
             with open(f'{pod["name"]}.log', 'wb') as f:
                 f.write(rsp.content)
             self.log.info('all logs are saved into the current directory')
+
+    def get_namespaces(self) -> list:
+        rsp = self.get(f'/api/v1/namespace')
+        self.log.debug('Requested get namespaces URL: ' + rsp.request.url)
+        namespaces = _parse_namespaces(rsp.json())
+        return namespaces

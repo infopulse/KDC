@@ -4,7 +4,7 @@ import pyperclip
 from prettytable import PrettyTable
 from kdc.kube_dashboard import KubeDashboard
 from kdc.config import (get_config, save_config, get_cluster_config,
-                        open_config_file, get_log)
+                        open_config_file, get_log, get_version_from_pyproject)
 
 CONFIG_FILE_NAME = 'config.toml'
 CONFIG_FILE_FOLDER = '.kdc'
@@ -18,7 +18,8 @@ def get_parser():
                     'Open the config file and fill in kubernetes dashboard URL and access token.'
                     'There can be many clusters defined in the config file, but only one can be operated at once.')
     parser.add_argument('-e', '--envs', help='list cluster (evn) names from the config file', action='store_true')
-    parser.add_argument('-n', '--namespace', help='set the default namespace to work with', type=str)
+    parser.add_argument('-n', '--namespace', help='list namespaces or set the default namespace to work with',
+                        type=str, nargs='?', const='!', default=None)
     parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
     parser.add_argument('-t', '--token', help='show and copy to clipboard the token of selected cluster',
                         action='store_true')
@@ -41,6 +42,7 @@ def get_parser():
     parser.add_argument('-w', '--whereisconfig', help='show where the config file is located', action='store_true')
     parser.add_argument('-f', '--file', help='download and save selected pod logs', nargs='+')
     parser.add_argument('-o', '--openconfig', help='open the config file in the default editor', action='store_true')
+    parser.add_argument('-v', '--version', help='show the current version', action='store_true')
     return parser
 
 
@@ -65,6 +67,11 @@ def app():
     parser = get_parser()
     args = parser.parse_args()
 
+    if args.version:
+        version = get_version_from_pyproject()
+        print(f'kdc version: {version}')
+        exit(0)
+
     dashboard = KubeDashboard(**cluster_config)
 
     if args.envs:
@@ -76,7 +83,16 @@ def app():
         print(prettytable)
         exit(0)
 
-    if args.namespace:
+    if args.namespace == '!':
+        prettytable = PrettyTable()
+        prettytable.field_names = ['Selected', 'Name', 'Phase', 'UID']
+        namespaces = dashboard.get_namespaces()
+        for namespace in namespaces:
+            selected = '------>' if namespace['name'] == config['default']['namespace'] else ''
+            prettytable.add_row([selected, namespace['name'], namespace['phase'], namespace['uid']])
+        print(prettytable)
+        exit(0)
+    elif args.namespace is not None:
         config = get_config(CONFIG_FILE_PATH)
         config['default']['namespace'] = args.namespace
         save_config(config, CONFIG_FILE_PATH)

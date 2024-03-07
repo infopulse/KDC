@@ -66,3 +66,18 @@ def _parse_raw_logs(raw_logs: list, name: str, offset=None) -> list:
     if offset:
         logs = [log for log in logs if log[0] > offset]
     return logs
+
+
+def _parse_namespaces(response: dict) -> list:
+    namespaces = list()
+    for ns in response['namespaces']:
+        n = {'name': 'unknown', 'phase': 'unknown', 'uid': 'unknown'}
+        try:
+            n['name'] = ns['objectMeta']['name']
+            n['phase'] = ns['phase']
+            n['uid'] = ns['objectMeta']['uid']
+        except Exception:
+            pass  # it is done in purpose to avoid corrupted pod data to crash the app
+        finally:
+            namespaces.append(n)
+    return namespaces

@@ -8,6 +8,7 @@ logs and pod data from the cluster.
 ## Features
 - [x] select kubernetes cluster to work with
 - [x] select kubernetes namespace to work with
+- [x] list namespaces
 - [x] list deployments
 - [x] list pods
 - [x] list jobs

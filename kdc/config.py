@@ -86,3 +86,9 @@ def get_cluster_config(cfg: dict) -> dict or None:
     cluster['name'] = default
     cluster.update(cfg['connection'])
     return cluster
+
+
+def get_version_from_pyproject():
+    data = toml.load("pyproject.toml")
+    version = data['project']['version']
+    return version
