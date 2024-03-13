@@ -33,7 +33,8 @@ def create_config(file_name: str) -> dict:
         },
         'connection': {
             'retries': 3,
-            'delay': 1
+            'delay': 1,
+            'page': 2000
         },
         'cluster': {
             'localhost': {

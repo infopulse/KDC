@@ -48,6 +48,7 @@ class KubeDashboard:
         self.timeout = kwargs.get('timeout', 10)
         self.delay = kwargs.get('delay', 1)
         self.namespace = kwargs.get('namespace', 'default')
+        self.log_page = kwargs.get('page', 2000)
 
     def authorize(self):
         rsp = self.session.get(self.url + '/api/v1/csrftoken/login', verify=False)
@@ -129,12 +130,12 @@ class KubeDashboard:
 
     def get_pod_logs(self, name: str, offset: dt.datetime = None) -> list:
         rsp = self.get(f'/api/v1/log/{self.namespace}/{name}',
-                       params={'logFilePosition': 'end', 'offsetTo': 2000})
+                       params={'logFilePosition': 'end', 'offsetTo': self.log_page})
         return _parse_raw_logs(rsp.json()['logs'], name, offset)
 
     def get_job_logs(self, pod_name: str, container_name: str, offset: dt.datetime = None) -> list:
         rsp = self.get(f'/api/v1/log/{self.namespace}/{pod_name}/{container_name}',
-                       params={'logFilePosition': 'end', 'offsetTo': 2000})
+                       params={'logFilePosition': 'end', 'offsetTo': self.log_page})
         return _parse_raw_logs(rsp.json()['logs'], pod_name, offset)
 
     def tail_pods_logs(self, *pod_patterns: str):
