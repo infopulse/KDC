@@ -4,7 +4,7 @@ import pyperclip
 from prettytable import PrettyTable
 from kdc.kube_dashboard import KubeDashboard
 from kdc.config import (get_config, save_config, get_cluster_config,
-                        open_config_file, get_log, get_version_from_pyproject)
+                        open_config_file, get_log, get_version)
 
 CONFIG_FILE_NAME = 'config.toml'
 CONFIG_FILE_FOLDER = '.kdc'
@@ -68,7 +68,7 @@ def app():
     args = parser.parse_args()
 
     if args.version:
-        version = get_version_from_pyproject()
+        version = get_version()
         print(f'kdc version: {version}')
         exit(0)
 

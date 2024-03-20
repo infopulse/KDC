@@ -2,6 +2,7 @@ import os
 import toml
 import subprocess
 import logging
+from importlib.metadata import distribution
 
 
 def get_log(name='KDC', save_logs=False, log_file='kdc.log', log_level='INFO'):
@@ -90,7 +91,6 @@ def get_cluster_config(cfg: dict) -> dict or None:
     return cluster
 
 
-def get_version_from_pyproject():
-    data = toml.load("pyproject.toml")
-    version = data['project']['version']
-    return version
+def get_version():
+    dist = distribution('kdc')
+    return dist.version
