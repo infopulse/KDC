@@ -4,7 +4,8 @@ import pyperclip
 from prettytable import PrettyTable
 from kdc.kube_dashboard import KubeDashboard
 from kdc.config import (get_config, save_config, get_cluster_config,
-                        open_config_file, get_log, get_version)
+                        open_config_file, get_log, get_version,
+                        get_namespace, set_namespace)
 
 CONFIG_FILE_NAME = 'config.toml'
 CONFIG_FILE_FOLDER = '.kdc'
@@ -94,22 +95,21 @@ def app():
         exit(0)
 
     if args.namespace == '!':
+        config = get_config(CONFIG_FILE_PATH)
         prettytable = PrettyTable()
         prettytable.field_names = ['Selected', 'Name', 'Phase', 'UID']
         namespaces = dashboard.get_namespaces()
         for namespace in namespaces:
-            selected = '------>' if namespace['name'] == config['default']['namespace'] else ''
+            selected = '------>' if namespace['name'] == get_namespace(config) else ''
             prettytable.add_row([selected, namespace['name'], namespace['phase'], namespace['uid']])
         print(prettytable)
         exit(0)
     elif args.namespace is not None:
         config = get_config(CONFIG_FILE_PATH)
-        config['default']['namespace'] = args.namespace
-        cluster_config['namespace'] = args.namespace
-        dashboard = KubeDashboard(**cluster_config)
+        config = set_namespace(config, args.namespace)
         save_config(config, CONFIG_FILE_PATH)
         log.info(f'Namespace set to {args.namespace}')
-        # exit(0) # no exit here, because we want to continue with the actions
+        exit(0)
 
     if args.token:
         default_cluster = config['default']['cluster']

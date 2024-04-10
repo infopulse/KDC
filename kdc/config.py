@@ -25,6 +25,7 @@ def create_config(file_name: str) -> dict:
     default_config = {
         'default': {
             'cluster': 'localhost',
+            'namespace': 'default'
         },
         'log': {
             'level': 'INFO',
@@ -95,3 +96,18 @@ def get_cluster_config(cfg: dict) -> dict or None:
 def get_version():
     dist = distribution('kdc')
     return dist.version
+
+
+def get_namespace(cfg: dict) -> str:
+    current_cluster = cfg['default']['cluster']
+    namespace = cfg['cluster'][current_cluster].get('namespace')
+    if namespace:
+        return namespace
+    else:
+        return cfg['default']['namespace']
+
+
+def set_namespace(cfg: dict, namespace: str) -> dict:
+    current_cluster = cfg['default']['cluster']
+    cfg['cluster'][current_cluster]['namespace'] = namespace
+    return cfg
