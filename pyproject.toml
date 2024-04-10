@@ -37,7 +37,5 @@ Homepage = "https://infopulse.com"
 Documentation = "https://github.com/infopulse/kdc"
 Code = "https://github.com/infopulse/kdc"
 
-readme = "Readme.md"
-
 [project.scripts]
 kdc = "kdc.main:main"
