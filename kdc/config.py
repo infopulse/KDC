@@ -94,7 +94,7 @@ def get_cluster_config(cfg: dict) -> dict or None:
 
 
 def get_version():
-    dist = distribution('kdc')
+    dist = distribution('kdc-kubeconnector')
     return dist.version
 
 
