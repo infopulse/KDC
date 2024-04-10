@@ -25,7 +25,6 @@ def create_config(file_name: str) -> dict:
     default_config = {
         'default': {
             'cluster': 'localhost',
-            'namespace': 'default'
         },
         'log': {
             'level': 'INFO',
@@ -35,16 +34,18 @@ def create_config(file_name: str) -> dict:
         'connection': {
             'retries': 3,
             'delay': 1,
-            'page': 2000
+            'page': 3000
         },
         'cluster': {
             'localhost': {
                 'url': 'http://localhost:8001',
                 'token': 'secure 1',
+                'namespace': 'default'
             },
             'dev': {
                 'url': 'https://k8s-dev.example.com',
                 'token': 'secure 2',
+                'namespace': 'default'
             }
         }
     }

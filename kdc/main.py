@@ -17,10 +17,11 @@ def get_parser():
                     f'For the first run file ~/{CONFIG_FILE_PATH} is created'
                     'Open the config file and fill in kubernetes dashboard URL and access token.'
                     'There can be many clusters defined in the config file, but only one can be operated at once.')
-    parser.add_argument('-e', '--envs', help='list cluster (evn) names from the config file', action='store_true')
+    parser.add_argument('-e', '--env', help='list or set cluster (evn) names from the config file',
+                        nargs='?', type=str, const='!', default=None)
     parser.add_argument('-n', '--namespace', help='list namespaces or set the default namespace to work with',
                         type=str, nargs='?', const='!', default=None)
-    parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
+    # parser.add_argument('-c', '--cluster', help='set the default cluster to work with', type=str)
     parser.add_argument('-t', '--token', help='show and copy to clipboard the token of selected cluster',
                         action='store_true')
 
@@ -74,13 +75,22 @@ def app():
 
     dashboard = KubeDashboard(**cluster_config)
 
-    if args.envs:
+    if args.env == '!':
         prettytable = PrettyTable()
         prettytable.field_names = ['Selected', 'Cluster', 'URL']
         for cluster, data in config['cluster'].items():
             selected = '------>' if cluster == config['default']['cluster'] else ''
             prettytable.add_row([selected, cluster, data['url']])
         print(prettytable)
+        exit(0)
+    elif args.env is not None:
+        config = get_config(CONFIG_FILE_PATH)
+        if args.env in config['cluster'].keys():
+            config['default']['cluster'] = args.env
+            save_config(config, CONFIG_FILE_PATH)
+            log.info(f'Cluster set to {args.env}')
+        else:
+            log.error(f'Cluster {args.env} not found in the config file. Configure the cluster first.')
         exit(0)
 
     if args.namespace == '!':
@@ -100,16 +110,6 @@ def app():
         save_config(config, CONFIG_FILE_PATH)
         log.info(f'Namespace set to {args.namespace}')
         # exit(0) # no exit here, because we want to continue with the actions
-
-    if args.cluster:
-        config = get_config(CONFIG_FILE_PATH)
-        if args.cluster in config['cluster'].keys():
-            config['default']['cluster'] = args.cluster
-            save_config(config, CONFIG_FILE_PATH)
-            log.info(f'Cluster set to {args.cluster}')
-        else:
-            log.error(f'Cluster {args.cluster} not found in the config file. Configure the cluster first.')
-        exit(0)
 
     if args.token:
         default_cluster = config['default']['cluster']
