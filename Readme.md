@@ -40,18 +40,22 @@ save = false
 [connection]
 retries = 3
 delay = 1
+page = 3000
 
 [cluster.localhost]
 url = "http://localhost:8001"
 token = "token"
+namespace = "default"
 
 [cluster.dev]
 url = "http://dev:8001
 token = "token2"
+namespace = "default"
 
 [cluster.uat]
 url = "http://uat:8001
 token = "token3"
+namespace = "default"
 ```
 
 ## Usage Examples
@@ -82,11 +86,8 @@ kdc -n dev
 kdc -n uat
 ```
 
-Use the namespace with other commands
-```bash
-kdc -n default -p --all pods from default namespace
-kdc -n dev -d --all deployments from dev namespace
-```
-
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Release Notes
+- 1.7.0 - fixed version issue. Added the ability to set the namespace by cluster. Improved env selection argument
