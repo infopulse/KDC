@@ -7,7 +7,7 @@ exclude = [".github", "config.toml", "build.bat", "build.sh"]
 
 [project]
 name = "kdc"
-version = "1.7.2"
+version = "1.7.3"
 description = "Tool to work with kubernetes dashboard, if there is no kubectl access"
 requires-python = ">=3.11"
 readme = "Readme.md"
@@ -27,7 +27,8 @@ classifiers = [
     "Topic :: Software Development :: Testing",
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
-    "Intended Audience :: Developers :: QA Engineers",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
