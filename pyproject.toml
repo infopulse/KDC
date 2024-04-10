@@ -7,9 +7,10 @@ exclude = [".github", "config.toml", "build.bat", "build.sh"]
 
 [project]
 name = "kdc"
-version = "1.7.1"
+version = "1.7.2"
 description = "Tool to work with kubernetes dashboard, if there is no kubectl access"
 requires-python = ">=3.11"
+readme = "Readme.md"
 
 dependencies = [
     "argparse>=1.4.0",
