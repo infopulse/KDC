@@ -21,7 +21,7 @@ logs and pod data from the cluster.
 
 ## Installation
 ```bash
-pip install git+https://github.com/infopulse/KDC.git
+pip install kdc-kubeconnector
 ```
 
 ## Configuration
