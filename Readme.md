@@ -90,5 +90,6 @@ kdc -n uat
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Release Notes
+- 1.7.7 - fixed wrong selection of namespace by cluster
 - 1.7.6 - fixed GitHub actions pipeline. Fixed version issue
 - 1.7.0 - fixed version issue. Added the ability to set the namespace by cluster. Improved env selection argument

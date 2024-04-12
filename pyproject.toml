@@ -7,7 +7,7 @@ exclude = [".github", "config.toml", "build.bat", "build.sh"]
 
 [project]
 name = "kdc-kubeconnector"
-version = "1.7.6"
+version = "1.7.7"
 description = "Tool to work with kubernetes dashboard, if there is no kubectl access"
 requires-python = ">=3.11"
 readme = "Readme.md"
